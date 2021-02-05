@@ -70,3 +70,6 @@ class Deck:
 
     def reset(self):
         self._current_deck = self._deck
+
+    def __len__(self):
+        return len(self._current_deck)
