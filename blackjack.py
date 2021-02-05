@@ -22,6 +22,10 @@ found_winner = False
 
 while not found_winner:
 
+    # Bet Amount
+    print("Your Balance is: ", player1._cash)
+    bet = int(input("How much would like to bet? "))
+
     # Shuffle Deck
     deck.shuffle()
 
@@ -67,11 +71,13 @@ while not found_winner:
 
             if player1.hand_count() > 21:
                 print("Sorry, the dealer wins this round. You went over 21.")
+                player1.cash_remove(bet)
                 found_winner = True
                 break
 
             elif player1.hand_count() == 21:
                 print("WOW! You got a perfect hand. You've Won this Round!!")
+                player1.cash_add(bet * 1.50)
                 found_winner = True
                 break
 
@@ -85,21 +91,25 @@ while not found_winner:
             if next_move == "Pass":
                 if dealer.hand_count() >= player1.hand_count() and not dealer.over_21():
                     print("Sorry, you've lost this round..")
+                    player1.cash_remove(bet)
                     found_winner = True
                     break
 
                 else:
                     print("You've Won this Round!!")
+                    player1.cash_add(bet * 1.50)
                     found_winner = True
                     break
 
     else:
         if dealer.hand_count() >= player1.hand_count() and not dealer.over_21():
             print("Sorry, you've lost this round..")
+            player1.cash_remove(bet)
             found_winner = True
 
         else:
             print("You've Won this Round!!")
+            player1.cash_add(bet * 1.50)
             found_winner = True
 
     print("Would you like to play again?")
