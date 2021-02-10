@@ -14,10 +14,10 @@ const Home = (props) => {
             <Title title={"Black Jack"}/>
             <div className={classes.PlayerBtn}>
                 <div>
-                    <Button name={"Singe-player"}/>
+                    <Button name={"Single-player"} player={"/single-player"}/>
                 </div>
                 <div style={{paddingLeft: "100px"}}>
-                    <Button name={"Multi-player"}/>
+                    <Button name={"Multi-player"} player={"/multi-player"}/>
                 </div>
                 
             </div>
