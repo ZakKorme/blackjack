@@ -1,0 +1,6 @@
+.PlayerBtn {
+  padding-top: 20%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}

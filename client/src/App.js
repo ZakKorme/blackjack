@@ -1,9 +1,9 @@
-import './App.css';
+import Home from "./containers/Home/Home";
 
 function App() {
   return (
-    <div className="App">
-      <h1>Black Jack</h1>
+    <div >
+      <Home/>
     </div>
   );
 }
