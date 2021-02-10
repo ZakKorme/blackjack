@@ -2,6 +2,7 @@ import { useState } from "react";
 import Dealer from "../Dealer/Dealer";
 import Player from "../Player/Player";
 
+
 import classes from "./Table.module.css";
 
 
@@ -20,6 +21,8 @@ const Table = (props) => {
             <Dealer/>
             {players}
             <h4 style={{textAlign: "right"}}>Amount: ${props.bet}</h4>
+            <button className={classes.Btn}>Hit</button>
+            <button className={classes.Btn}>Pass</button>
         </div>
     );
 }
