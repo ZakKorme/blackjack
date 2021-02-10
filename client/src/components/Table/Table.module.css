@@ -1,0 +1,10 @@
+.Table {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border: solid 2px black;
+  border-radius: 4px;
+  margin: 5%;
+  padding: 8%;
+}
