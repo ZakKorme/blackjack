@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Title from "../../components/Title/Title";
 import Table from "../../components/Table/Table";
+import Deck from "../../util/deck";
 
 const Singleplayer = (props) => {
     const [bet, setBet] = useState(0);
@@ -14,7 +15,7 @@ const Singleplayer = (props) => {
 
     const onGameStart = () => {
         if (!bet) return console.log("You must bet first!");
-        setGameStart((<Table players={1} bet={bet}/>));
+        setGameStart((<Table players={1} bet={bet} gameStart={true}/>));
         
     }
 
