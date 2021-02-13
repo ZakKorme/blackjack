@@ -4,25 +4,16 @@ import Deck from "../../util/deck";
 import Card from "../Card/Card";
 import classes from "./Table.module.css";
 import { useState } from "react";
-import Modal from "react-modal";
-
-Modal.setAppElement("#root");
-const modalStyle = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-  },
-};
+import ModalCustom from "../Modal/Modal";
 
 const Table = (props) => {
   const [dealerCards, setDealerCards] = useState([]);
   const [playerCards, setPlayerCards] = useState([]);
   const [disableBtn, setDisableBtn] = useState(false);
   const [showModal, setShowModal] = useState(true);
+  const [playerAccount, setPlayerAccount] = useState(props.bet);
+  const [betRound, setBetRound] = useState(0);
+  const [round, setRound] = useState("start");
 
   let players =
     props.players < 2 ? (
@@ -38,6 +29,23 @@ const Table = (props) => {
   dealer.shuffle();
   player1.shuffle();
 
+  // MODAL FUNCTIONS
+  const modalHandler = () => {
+    setShowModal(!showModal);
+  };
+
+  const onBetModalHandler = (e) => {
+    e.preventDefault();
+    setBetRound(e.target.value);
+  };
+
+  // GAME HANDLERS
+  const countCards = (arr) => {
+    let num = 0;
+    arr.map((card) => (num += card.props.number));
+    return num;
+  };
+
   const hitHandler = () => {
     let hitCard = player1.deal();
     setPlayerCards((playerCards) => [
@@ -51,53 +59,17 @@ const Table = (props) => {
     let playerHand = countCards(playerCards);
 
     if (playerHand > 21) {
-      console.log("Sorry, you lost..");
-      setDisableBtn(true);
+      let losses = playerAccount - betRound;
+      setPlayerAccount(losses);
+      setPlayerCards([]);
+      setDealerCards([]);
+      setRound("endgame-loss");
+      setShowModal(!showModal);
     }
   };
-
-  // MODAL FUNCTIONS
-  const modalHandler = (e) => {
-    setShowModal(!showModal);
-  };
-
-  let modal = (
-    <Modal isOpen={showModal} style={modalStyle}>
-      <h2>How much would you like to bet on this round?</h2>
-      <p>Your funds are below:</p>
-      <p>${props.bet}</p>
-      <form>
-        <input placeholder={"$"} />
-        <button onClick={modalHandler}>Lets Play!</button>
-        <button>Cancel</button>
-      </form>
-    </Modal>
-  );
-
-  const countCards = (arr) => {
-    let num = 0;
-    arr.map((card) => (num += card.props.number));
-    return num;
-  };
-
-  const isWinner = () => {
-    let playerHand = countCards(playerCards);
-    let dealerHand = countCards(dealerCards);
-
-    if (playerHand > dealerHand && playerHand <= 21) {
-      console.log("YOU WON!");
-      console.log("player:", playerHand);
-      console.log("dealer:", dealerHand);
-      setDisableBtn(true);
-    } else {
-      console.log("Sorry, dealer won...");
-      console.log("player:", playerHand);
-      console.log("dealer:", dealerHand);
-      setDisableBtn(true);
-    }
-  };
-
-  if (playerCards.length < 2) {
+  // Deal Player and Dealer hands
+  if (playerCards.length < 2 && dealerCards.length < 1) {
+    // Cards - Player
     for (let i = 0; i < 2; i++) {
       let temp = player1.deal();
       setPlayerCards((playerCards) => [
@@ -110,8 +82,21 @@ const Table = (props) => {
       ]);
     }
 
+    // Cards - Dealer
     for (let i = 0; i < 2; i++) {
       let temp = dealer.deal();
+      if (i === 1) {
+        setDealerCards((dealerCards) => [
+          ...dealerCards,
+          <Card
+            back={true}
+            key={`dealer-${i} + ${temp[0]}`}
+            suit={temp[0]}
+            number={temp[1]}
+          />,
+        ]);
+        break;
+      }
       setDealerCards((dealerCards) => [
         ...dealerCards,
         <Card
@@ -123,14 +108,52 @@ const Table = (props) => {
     }
   }
 
+  const isWinner = () => {
+    let playerHand = countCards(playerCards);
+    let dealerHand = countCards(dealerCards);
+
+    if (playerHand > dealerHand && playerHand <= 21) {
+      let winnings = Number(playerAccount) + betRound * 1.5;
+
+      setPlayerAccount(winnings);
+      setPlayerCards([]);
+      setDealerCards([]);
+      setRound("endgame-win");
+      setShowModal(!showModal);
+    } else {
+      let losses = playerAccount - betRound;
+      setPlayerAccount(losses);
+      setPlayerCards([]);
+      setDealerCards([]);
+      setRound("endgame-loss");
+      setShowModal(!showModal);
+    }
+  };
+
+  const playAgainHandler = () => {
+    setRound("start");
+    setBetRound(0);
+    setShowModal(true);
+  };
+
   return (
     <div className={classes.Table}>
-      {modal}
+      <ModalCustom
+        round={round}
+        showModal={showModal}
+        playerAccount={playerAccount}
+        betRound={betRound}
+        betHandler={onBetModalHandler}
+        modalHandler={modalHandler}
+        playAgainHandler={playAgainHandler}
+      />
       <Dealer />
       <div>{dealerCards}</div>
       {players}
       <div>{playerCards}</div>
-      <h4 style={{ textAlign: "right" }}>Amount: ${props.bet}</h4>
+      <h4 style={{ textAlign: "right" }}>
+        Amount: ${playerAccount} -- You've bet ${betRound} this round
+      </h4>
       <button
         className={classes.Btn}
         onClick={hitHandler}
@@ -139,9 +162,8 @@ const Table = (props) => {
         Hit
       </button>
       <button className={classes.Btn} onClick={isWinner} disabled={disableBtn}>
-        Pass
+        Stand
       </button>
-      <button onClick={modalHandler}>Show Modal</button>
     </div>
   );
 };

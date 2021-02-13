@@ -17,7 +17,7 @@ const Singleplayer = (props) => {
   };
 
   let game = (
-    <div style={{ "text-align": "center", paddingTop: "10%" }}>
+    <div style={{ textAlign: "center", paddingTop: "10%" }}>
       <h2>How much will you be playing with today?</h2>
       <input type="number" onChange={onBet} placeholder={"$"} />
       <button onClick={onGameStart}>Lets play!</button>
