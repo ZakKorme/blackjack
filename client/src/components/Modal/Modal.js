@@ -1,4 +1,5 @@
 import Modal from "react-modal";
+import { Link } from "react-router-dom";
 
 Modal.setAppElement("#root");
 const modalStyle = {
@@ -57,6 +58,22 @@ const ModalCustom = (props) => {
             <form>
               <button onClick={props.playAgainHandler}>Lets Play Again!</button>
               <button>End Game</button>
+            </form>
+          </Modal>
+        );
+        break;
+      case "out-of-money":
+        modal = (
+          <Modal isOpen={props.showModal} style={modalStyle}>
+            <h2>Sorry, you've ran out of funds...</h2>
+            <p>
+              We'll redirect you if you want to add more money into your account
+            </p>
+            <p style={{ color: "red" }}>${props.playerAccount}</p>
+            <form>
+              <Link to={"/"}>
+                <button>End Game</button>
+              </Link>
             </form>
           </Modal>
         );
