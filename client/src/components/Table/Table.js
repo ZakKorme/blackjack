@@ -106,7 +106,8 @@ const Table = (props) => {
 
     if (playerHand > dealerHand && playerHand <= 21) {
       let winnings = numberWithCommas(Number(playerAccount) + betRound * 1.5);
-
+      console.log(dealerCards[1].number);
+      console.log(dealerCards[1].suit);
       setPlayerAccount(winnings);
       setRound("endgame-win");
       setShowModal(!showModal);
@@ -139,7 +140,19 @@ const Table = (props) => {
         playAgainHandler={playAgainHandler}
       />
       <Dealer />
-      <div>{dealerCards}</div>
+      <div>
+        {dealerCards && dealerBlackCard
+          ? dealerCards
+          : [
+              dealerCards[0],
+              <Card
+                back={false}
+                key={dealerCards[1].props.key}
+                suit={dealerCards[1].props.suit}
+                number={dealerCards[1].props.number}
+              />,
+            ]}
+      </div>
       {players}
       <div>{playerCards}</div>
       <h4 style={{ textAlign: "right" }}>
