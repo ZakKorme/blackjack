@@ -5,11 +5,13 @@ import Card from "../Card/Card";
 import classes from "./Table.module.css";
 import { useState } from "react";
 import ModalCustom from "../Modal/Modal";
+import numberWithCommas from "../../util/numberformat";
 
 const Table = (props) => {
   const [dealerCards, setDealerCards] = useState([]);
+  const [dealerBlackCard, setDealerBlackCard] = useState(true);
   const [playerCards, setPlayerCards] = useState([]);
-  const [disableBtn, setDisableBtn] = useState(false);
+  const [disableBtn] = useState(false);
   const [showModal, setShowModal] = useState(true);
   const [playerAccount, setPlayerAccount] = useState(props.bet);
   const [betRound, setBetRound] = useState(0);
@@ -46,23 +48,21 @@ const Table = (props) => {
     return num;
   };
 
-  const hitHandler = () => {
+  const hitHandler = async () => {
     let hitCard = player1.deal();
-    setPlayerCards((playerCards) => [
+    await setPlayerCards((playerCards) => [
       ...playerCards,
       <Card
-        key={`player-${playerCards.length + 1}`}
+        key={`player-${playerCards.length + 1} + ${hitCard[0]}`}
         suit={hitCard[0]}
         number={hitCard[1]}
       />,
     ]);
-    let playerHand = countCards(playerCards);
-
+    let playerHand = countCards(playerCards) + hitCard[1];
+    console.log(playerHand);
     if (playerHand > 21) {
-      let losses = playerAccount - betRound;
+      let losses = numberWithCommas(playerAccount - betRound);
       setPlayerAccount(losses);
-      setPlayerCards([]);
-      setDealerCards([]);
       setRound("endgame-loss");
       setShowModal(!showModal);
     }
@@ -85,21 +85,10 @@ const Table = (props) => {
     // Cards - Dealer
     for (let i = 0; i < 2; i++) {
       let temp = dealer.deal();
-      if (i === 1) {
-        setDealerCards((dealerCards) => [
-          ...dealerCards,
-          <Card
-            back={true}
-            key={`dealer-${i} + ${temp[0]}`}
-            suit={temp[0]}
-            number={temp[1]}
-          />,
-        ]);
-        break;
-      }
       setDealerCards((dealerCards) => [
         ...dealerCards,
         <Card
+          back={i === 1 ? dealerBlackCard : false}
           key={`dealer-${i} + ${temp[0]}`}
           suit={temp[0]}
           number={temp[1]}
@@ -112,26 +101,28 @@ const Table = (props) => {
     let playerHand = countCards(playerCards);
     let dealerHand = countCards(dealerCards);
 
+    //Show Dealer card
+    setDealerBlackCard(false);
+
     if (playerHand > dealerHand && playerHand <= 21) {
-      let winnings = Number(playerAccount) + betRound * 1.5;
+      let winnings = numberWithCommas(Number(playerAccount) + betRound * 1.5);
 
       setPlayerAccount(winnings);
-      setPlayerCards([]);
-      setDealerCards([]);
       setRound("endgame-win");
       setShowModal(!showModal);
     } else {
-      let losses = playerAccount - betRound;
+      let losses = numberWithCommas(playerAccount - betRound);
       setPlayerAccount(losses);
-      setPlayerCards([]);
-      setDealerCards([]);
       setRound("endgame-loss");
       setShowModal(!showModal);
     }
   };
 
   const playAgainHandler = () => {
+    setDealerBlackCard(true);
     setRound("start");
+    setPlayerCards([]);
+    setDealerCards([]);
     setBetRound(0);
     setShowModal(true);
   };
@@ -141,7 +132,7 @@ const Table = (props) => {
       <ModalCustom
         round={round}
         showModal={showModal}
-        playerAccount={playerAccount}
+        playerAccount={numberWithCommas(playerAccount)}
         betRound={betRound}
         betHandler={onBetModalHandler}
         modalHandler={modalHandler}
@@ -152,7 +143,8 @@ const Table = (props) => {
       {players}
       <div>{playerCards}</div>
       <h4 style={{ textAlign: "right" }}>
-        Amount: ${playerAccount} -- You've bet ${betRound} this round
+        Amount: ${numberWithCommas(playerAccount)} -- You've bet $
+        {numberWithCommas(betRound)} this round
       </h4>
       <button
         className={classes.Btn}
