@@ -66,6 +66,12 @@ const Table = (props) => {
       setShowModal(!showModal);
     }
   };
+
+  //New deck cards run out
+  if (player1.length === 1 && dealer.length === 1) {
+    player1 = new Deck();
+    dealer = new Deck();
+  }
   // Deal Player and Dealer hands
   if (playerCards.length < 2 && dealerCards.length < 1) {
     // Cards - Player
@@ -158,7 +164,7 @@ const Table = (props) => {
       </div>
       {players}
       <div>{playerCards}</div>
-      <h4 style={{ textAlign: "right" }}>
+      <h4 style={{ textAlign: "right", paddingTop: "50px" }}>
         Amount: ${numberWithCommas(playerAccount)} -- You've bet $
         {numberWithCommas(betRound)} this round
       </h4>

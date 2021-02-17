@@ -15,12 +15,12 @@
     </mask>
   </defs>
 
-  <rect x="100" y="200" height="100" width="100" fill="#000" mask="url(#stem-mask)" />
+  <rect x="200" y="400" height="200" width="200" fill="#000" mask="url(#stem-mask)" />
 
 <g transform="rotate(225,300,300)">
-  <rect width="150" height="150" x="100" y="100" />
-  <circle cx="100" cy="175" r="75" />
-  <circle cx="175" cy="100" r="75" />
+  <rect width="300" height="300" x="200" y="200" />
+  <circle cx="200" cy="350" r="150" />
+  <circle cx="350" cy="200" r="150" />
 </g>
 
 </svg>

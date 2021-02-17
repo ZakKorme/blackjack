@@ -44,7 +44,9 @@ const ModalCustom = (props) => {
             <p style={{ color: "green" }}>${props.betRound * 1.5}</p>
             <form>
               <button onClick={props.playAgainHandler}>Lets Play Again!</button>
-              <button>End Game</button>
+              <Link to={"/"}>
+                <button>End Game</button>
+              </Link>
             </form>
           </Modal>
         );
@@ -57,7 +59,9 @@ const ModalCustom = (props) => {
             <p style={{ color: "red" }}>${props.betRound}</p>
             <form>
               <button onClick={props.playAgainHandler}>Lets Play Again!</button>
-              <button>End Game</button>
+              <Link to={"/"}>
+                <button>End Game</button>
+              </Link>
             </form>
           </Modal>
         );

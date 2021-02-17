@@ -1,0 +1,33 @@
+.pokerchip {
+  margin: 0.5em;
+  font-size: 1.2em;
+  position: relative;
+  display: inline-block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 5em;
+  height: 5em;
+  background: #555;
+  border-radius: 50%;
+  position: relative;
+  border: 0.5em dashed white;
+  transition: all 0.5s ease;
+  backface-visibility: hidden;
+}
+
+.pokerchip.red {
+  background: #dd4631;
+}
+
+.pokerchip.blue {
+  background: #317ddd;
+}
+
+.pokerchip.flat {
+  box-shadow: 0 0 0 0.2em #fff;
+}
+
+.pokerchip.flat:hover {
+  transform: rotate(90deg);
+}

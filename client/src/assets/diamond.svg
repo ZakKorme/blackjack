@@ -7,7 +7,7 @@
      baseProfile="tiny"
      viewBox="0 0 600 600">
 
-  <rect x="100" y="100" width="200" height="200" style="fill:red" 
+  <rect x="100" y="100" width="400" height="400" style="fill:red" 
 	transform="rotate(45,300,300)" />
 
 </svg>

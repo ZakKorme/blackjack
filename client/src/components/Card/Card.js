@@ -38,7 +38,7 @@ const Card = (props) => {
         <strong>{props.number}</strong>
       </span>
       <br />
-      <span className={classes.Suit}>{suit}</span>
+      <div className={classes.Suit}>{suit}</div>
     </div>
   );
 };
