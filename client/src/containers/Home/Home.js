@@ -1,6 +1,5 @@
 import Title from "../../components/Title/Title";
 import Button from "../../components/Button/Button";
-import Chip from "../../components/Chip/Chip";
 
 import classes from "./Home.module.css";
 
