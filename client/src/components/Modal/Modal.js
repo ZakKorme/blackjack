@@ -1,5 +1,6 @@
 import Modal from "react-modal";
 import { Link } from "react-router-dom";
+import numberWithCommas from "../../util/numberformat";
 
 Modal.setAppElement("#root");
 const modalStyle = {
@@ -23,7 +24,7 @@ const ModalCustom = (props) => {
           <Modal isOpen={props.showModal} style={modalStyle}>
             <h2>How much would you like to bet on this round?</h2>
             <p>Your funds are below:</p>
-            <p>${props.playerAccount}</p>
+            <p>${numberWithCommas(props.playerAccount)}</p>
             <form>
               <input
                 type="number"

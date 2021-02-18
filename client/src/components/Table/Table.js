@@ -60,7 +60,7 @@ const Table = (props) => {
     ]);
     let playerHand = countCards(playerCards) + hitCard[1];
     if (playerHand > 21) {
-      let losses = numberWithCommas(playerAccount - betRound);
+      let losses = playerAccount - betRound;
       setPlayerAccount(losses);
       setRound("endgame-loss");
       setShowModal(!showModal);
@@ -110,12 +110,12 @@ const Table = (props) => {
     setDealerBlackCard(false);
 
     if (playerHand > dealerHand && playerHand <= 21) {
-      let winnings = numberWithCommas(Number(playerAccount) + betRound * 1.5);
+      let winnings = Number(playerAccount) + betRound * 1.5;
       setPlayerAccount(winnings);
       setRound("endgame-win");
       setShowModal(!showModal);
     } else {
-      let losses = numberWithCommas(playerAccount - betRound);
+      let losses = Number(playerAccount) - betRound;
       setPlayerAccount(losses);
       setRound("endgame-loss");
       setShowModal(!showModal);
