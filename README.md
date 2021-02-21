@@ -2,12 +2,19 @@
 
 In the following application users will be able to a play a game of black jack, with the computer or a friend. The following images provide a sample of the functionality and features this application will have.
 
+## Screen capture
+![React App](https://user-images.githubusercontent.com/38298940/108430320-32f62480-720f-11eb-97cf-b9cc6eb5fa9c.gif)
+
+
 ## Run
 
-Run the following code in your terminal
-`python3 blackjack.py`
+1. cd into the client folder
+`cd client`
 
-## Mock Design
+2. Run the application
+`npm start`
+
+## Mock Design - Figma
 ![Screen Shot 2021-02-04 at 10 45 42 PM](https://user-images.githubusercontent.com/38298940/106987122-c2dd9e00-673a-11eb-9cdb-66a8ace8cce0.png)
 
 
