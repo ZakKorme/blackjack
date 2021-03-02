@@ -1,4 +1,5 @@
 import classes from "./Card.module.css";
+import backCard from "../../assets/Cards/cardBack_blue.png";
 
 import clubs02 from "../../assets/Cards/card_clubs_02.png";
 import clubs03 from "../../assets/Cards/card_clubs_03.png";
@@ -249,7 +250,11 @@ const Card = (props) => {
     }
   }
 
-  return <div className={style}>{suit}</div>;
+  if (props.back) {
+    suit = <img src={backCard} alt="backCard" />;
+  }
+
+  return <div className={classes.Card}>{suit}</div>;
 };
 
 export default Card;

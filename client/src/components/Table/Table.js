@@ -6,19 +6,24 @@ import classes from "./Table.module.css";
 import { useState } from "react";
 import ModalCustom from "../Modal/Modal";
 import numberWithCommas from "../../util/numberformat";
+import timeout from "../../util/timeout";
 
 const Table = (props) => {
   const [dealerCards, setDealerCards] = useState([]);
   const [dealerBlackCard, setDealerBlackCard] = useState(true);
   const [dealerDeck, setDealerDeck] = useState(new Deck());
+
   const [playerCards, setPlayerCards] = useState([]);
   const [playerDeck, setPlayerDeck] = useState(new Deck());
+  const [playerAccount, setPlayerAccount] = useState(props.bet1);
+
   const [player2Cards, setPlayer2Cards] = useState([]);
   const [player2Deck, setPlayer2Deck] = useState(new Deck());
+  const [playerAccount2, setPlayerAccount2] = useState(props.bet2);
+
   const [disableBtn] = useState(false);
   const [showModal, setShowModal] = useState(true);
-  const [playerAccount, setPlayerAccount] = useState(props.bet1);
-  const [playerAccount2, setPlayerAccount2] = useState(props.bet2);
+
   const [betRound, setBetRound] = useState(0);
   const [round, setRound] = useState("start");
 
@@ -72,6 +77,8 @@ const Table = (props) => {
     ]);
     let playerHand = countCards(playerCards) + hitCard[1];
     if (playerHand > 21) {
+      setDealerBlackCard(false);
+      await timeout(600);
       let losses = playerAccount - betRound;
       setPlayerAccount(losses);
       setRound("endgame-loss");
@@ -136,7 +143,6 @@ const Table = (props) => {
     // Deal Player and Dealer hands
     if (playerCards.length < 2 && dealerCards.length < 1) {
       // Cards - Player
-      console.log("Single Player");
       for (let i = 0; i < 2; i++) {
         let temp = playerDeck.deal();
         setPlayerCards((playerCards) => [
@@ -167,13 +173,16 @@ const Table = (props) => {
     }
   }
 
-  const isWinner = () => {
+  const isWinner = async () => {
     let playerHand = countCards(playerCards);
     let dealerHand = countCards(dealerCards);
 
     //Show Dealer card
 
     if (playerHand > dealerHand && playerHand <= 21) {
+      setDealerBlackCard(false);
+      await timeout(600);
+
       let winnings = Number(playerAccount) + betRound * 1.5;
       setPlayerAccount(winnings);
       setRound("endgame-win");
@@ -184,6 +193,9 @@ const Table = (props) => {
       dealerDeck.reset();
       dealerDeck.shuffle();
     } else {
+      setDealerBlackCard(false);
+      await timeout(600);
+
       let losses = Number(playerAccount) - betRound;
       setPlayerAccount(losses);
       setRound("endgame-loss");
@@ -233,6 +245,7 @@ const Table = (props) => {
                 key={dealerCards[1].key}
                 suit={dealerCards[1].props.suit}
                 number={dealerCards[1].props.number}
+                path={dealerCards[1].props.path}
               />,
             ]}
       </div>
