@@ -10,26 +10,36 @@ import numberWithCommas from "../../util/numberformat";
 const Table = (props) => {
   const [dealerCards, setDealerCards] = useState([]);
   const [dealerBlackCard, setDealerBlackCard] = useState(true);
+  const [dealerDeck, setDealerDeck] = useState(new Deck());
   const [playerCards, setPlayerCards] = useState([]);
+  const [playerDeck, setPlayerDeck] = useState(new Deck());
+  const [player2Cards, setPlayer2Cards] = useState([]);
+  const [player2Deck, setPlayer2Deck] = useState(new Deck());
   const [disableBtn] = useState(false);
   const [showModal, setShowModal] = useState(true);
-  const [playerAccount, setPlayerAccount] = useState(props.bet);
+  const [playerAccount, setPlayerAccount] = useState(props.bet1);
+  const [playerAccount2, setPlayerAccount2] = useState(props.bet2);
   const [betRound, setBetRound] = useState(0);
   const [round, setRound] = useState("start");
 
   let players =
     props.players < 2 ? (
-      <Player playerNum={1} />
+      <div style={{ paddingTop: "20px", textAlign: "center" }}>
+        <Player playerNum={1} />
+        {playerCards}
+      </div>
     ) : (
       <div style={{ paddingTop: "100px" }}>
         <Player playerNum={1} />
+        {playerCards}
         <Player playerNum={2} />
+        {player2Cards}
       </div>
     );
-  let dealer = new Deck();
-  let player1 = new Deck();
-  dealer.shuffle();
-  player1.shuffle();
+
+  dealerDeck.shuffle();
+  playerDeck.shuffle();
+  player2Deck.shuffle();
 
   // MODAL FUNCTIONS
   const modalHandler = () => {
@@ -49,13 +59,15 @@ const Table = (props) => {
   };
 
   const hitHandler = async () => {
-    let hitCard = player1.deal();
+    let hitCard = playerDeck.deal();
+
     await setPlayerCards((playerCards) => [
       ...playerCards,
       <Card
         key={`player-${playerCards.length + 1} + ${hitCard[0]}`}
         suit={hitCard[0]}
         number={hitCard[1]}
+        path={hitCard[2]}
       />,
     ]);
     let playerHand = countCards(playerCards) + hitCard[1];
@@ -64,41 +76,94 @@ const Table = (props) => {
       setPlayerAccount(losses);
       setRound("endgame-loss");
       setShowModal(!showModal);
+      playerDeck.reset();
+      playerDeck.shuffle();
+      dealerDeck.reset();
+      dealerDeck.shuffle();
     }
   };
 
-  //New deck cards run out
-  if (player1.length === 1 && dealer.length === 1) {
-    player1 = new Deck();
-    dealer = new Deck();
-  }
-  // Deal Player and Dealer hands
-  if (playerCards.length < 2 && dealerCards.length < 1) {
-    // Cards - Player
-    for (let i = 0; i < 2; i++) {
-      let temp = player1.deal();
-      setPlayerCards((playerCards) => [
-        ...playerCards,
-        <Card
-          key={`player-${i} + ${temp[0]}`}
-          suit={temp[0]}
-          number={temp[1]}
-        />,
-      ]);
-    }
+  if (props.players > 1) {
+    // Deal Player and Dealer hands
+    if (
+      playerCards.length < 2 &&
+      player2Cards.length < 2 &&
+      dealerCards.length < 1
+    ) {
+      // Cards - Player1
+      for (let i = 0; i < 2; i++) {
+        let temp = playerDeck.deal();
+        setPlayerCards((playerCards) => [
+          ...playerCards,
+          <Card
+            key={`player-${i} + ${temp[0]}`}
+            suit={temp[0]}
+            number={temp[1]}
+            path={temp[2]}
+          />,
+        ]);
+      }
+      // Cards - Player2
+      for (let i = 0; i < 2; i++) {
+        let temp = player2Deck.deal();
+        setPlayer2Cards((player2Cards) => [
+          ...player2Cards,
+          <Card
+            key={`player-${i} + ${temp[0]}`}
+            suit={temp[0]}
+            number={temp[1]}
+            path={temp[2]}
+          />,
+        ]);
+      }
 
-    // Cards - Dealer
-    for (let i = 0; i < 2; i++) {
-      let temp = dealer.deal();
-      setDealerCards((dealerCards) => [
-        ...dealerCards,
-        <Card
-          back={i === 1 ? dealerBlackCard : false}
-          key={`dealer-${i} + ${temp[0]}`}
-          suit={temp[0]}
-          number={temp[1]}
-        />,
-      ]);
+      // Cards - Dealer
+      for (let i = 0; i < 2; i++) {
+        let temp = dealerDeck.deal();
+        setDealerCards((dealerCards) => [
+          ...dealerCards,
+          <Card
+            back={i === 1 ? dealerBlackCard : false}
+            key={`dealer-${i} + ${temp[0]}`}
+            suit={temp[0]}
+            number={temp[1]}
+            path={temp[2]}
+          />,
+        ]);
+      }
+    }
+  } else {
+    // Deal Player and Dealer hands
+    if (playerCards.length < 2 && dealerCards.length < 1) {
+      // Cards - Player
+      console.log("Single Player");
+      for (let i = 0; i < 2; i++) {
+        let temp = playerDeck.deal();
+        setPlayerCards((playerCards) => [
+          ...playerCards,
+          <Card
+            key={`player-${i} + ${temp[0]}`}
+            suit={temp[0]}
+            number={temp[1]}
+            path={temp[2]}
+          />,
+        ]);
+      }
+
+      // Cards - Dealer
+      for (let i = 0; i < 2; i++) {
+        let temp = dealerDeck.deal();
+        setDealerCards((dealerCards) => [
+          ...dealerCards,
+          <Card
+            back={i === 1 ? dealerBlackCard : false}
+            key={`dealer-${i} + ${temp[0]}`}
+            suit={temp[0]}
+            number={temp[1]}
+            path={temp[2]}
+          />,
+        ]);
+      }
     }
   }
 
@@ -107,18 +172,27 @@ const Table = (props) => {
     let dealerHand = countCards(dealerCards);
 
     //Show Dealer card
-    setDealerBlackCard(false);
 
     if (playerHand > dealerHand && playerHand <= 21) {
       let winnings = Number(playerAccount) + betRound * 1.5;
       setPlayerAccount(winnings);
       setRound("endgame-win");
       setShowModal(!showModal);
+
+      playerDeck.reset();
+      playerDeck.shuffle();
+      dealerDeck.reset();
+      dealerDeck.shuffle();
     } else {
       let losses = Number(playerAccount) - betRound;
       setPlayerAccount(losses);
       setRound("endgame-loss");
       setShowModal(!showModal);
+
+      playerDeck.reset();
+      playerDeck.shuffle();
+      dealerDeck.reset();
+      dealerDeck.shuffle();
     }
   };
 
@@ -163,7 +237,7 @@ const Table = (props) => {
             ]}
       </div>
       {players}
-      <div>{playerCards}</div>
+      {/* <div>{player2Cards ? player2Cards : null}</div> */}
       <h4 style={{ textAlign: "right", paddingTop: "50px" }}>
         Amount: ${numberWithCommas(playerAccount)} -- You've bet $
         {numberWithCommas(betRound)} this round
