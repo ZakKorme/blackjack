@@ -1,26 +1,108 @@
-.Card {
+/* .Card {
   display: inline-block;
   text-align: center;
-  width: 4.3em;
-  height: 7.6em;
-  /* border: 1px solid #666; */
+  width: 4.5em;
+  height: 5.6em;
   border-radius: 0.3em;
   -moz-border-radius: 0.3em;
   -webkit-border-radius: 0.3em;
   -khtml-border-radius: 0.3em;
-  padding: 0.25em;
-  margin: 0 0.5em 0.5em 0;
-  text-align: center;
+  margin-left: 0.5em;
   font-size: 1.2em;
   font-weight: normal;
   font-family: Arial, sans-serif;
   position: relative;
   padding-right: 40px;
-}
+  background: transparent;
+} */
 
-img {
+/* img {
   width: 80px;
   height: 80px;
   display: "inline-flex";
   justify-content: center;
+} */
+
+.container {
+  display: inline-flex;
+  flex-direction: row;
+}
+
+.playingCard {
+  background: transparent;
+  text-align: center;
+  width: 4.5em;
+  height: 5.6em;
+  margin: 10px;
+  perspective: 1000px;
+}
+
+.FlipCard {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  -moz-border-radius: 0.3em;
+  -webkit-border-radius: 0.3em;
+  -khtml-border-radius: 0.3em;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.playingCard:hover .FlipCard {
+  transform: rotateY(-180deg);
+}
+
+.Back,
+.Front {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.Front {
+  background-color: green;
+  transform: rotateY(180deg);
+}
+.Back {
+  background-color: green;
+}
+
+.Front img,
+.Back img {
+  width: 100%;
+  height: 100%;
+}
+
+.playerAnimation {
+  animation: playerAnimation 0.8s;
+  animation-iteration-count: 1;
+  animation-direction: reverse;
+}
+
+.dealerAnimation {
+  animation: dealerAnimation 0.8s;
+  animation-iteration-count: 1;
+  animation-direction: reverse;
+}
+
+@keyframes playerAnimation {
+  100% {
+    transform: translate(280px, -150px);
+  }
+
+  0% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes dealerAnimation {
+  100% {
+    transform: translate(250px, 100px);
+  }
+
+  0% {
+    transform: translate(0, 0);
+  }
 }

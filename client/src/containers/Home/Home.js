@@ -6,7 +6,7 @@ import classes from "./Home.module.css";
 const Home = (props) => {
   return (
     <div>
-      <Title title={"Black Jack"} />
+      <Title title={"Black Jack"} style={{ paddingBottom: "20px" }} />
       <div className={classes.PlayerBtn}>
         <div>
           <Button name={"Single-player"} player={"/single-player"} />

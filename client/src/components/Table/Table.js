@@ -7,18 +7,19 @@ import { useState } from "react";
 import ModalCustom from "../Modal/Modal";
 import numberWithCommas from "../../util/numberformat";
 import timeout from "../../util/timeout";
+import cardSound from "../../assets/240777__f4ngy__dealing-card.wav";
 
 const Table = (props) => {
   const [dealerCards, setDealerCards] = useState([]);
   const [dealerBlackCard, setDealerBlackCard] = useState(true);
-  const [dealerDeck, setDealerDeck] = useState(new Deck());
+  const [dealerDeck] = useState(new Deck());
 
   const [playerCards, setPlayerCards] = useState([]);
-  const [playerDeck, setPlayerDeck] = useState(new Deck());
+  const [playerDeck] = useState(new Deck());
   const [playerAccount, setPlayerAccount] = useState(props.bet1);
 
   const [player2Cards, setPlayer2Cards] = useState([]);
-  const [player2Deck, setPlayer2Deck] = useState(new Deck());
+  const [player2Deck] = useState(new Deck());
   const [playerAccount2, setPlayerAccount2] = useState(props.bet2);
 
   const [disableBtn] = useState(false);
@@ -27,9 +28,11 @@ const Table = (props) => {
   const [betRound, setBetRound] = useState(0);
   const [round, setRound] = useState("start");
 
+  const audio = new Audio(cardSound);
+
   let players =
     props.players < 2 ? (
-      <div style={{ paddingTop: "20px", textAlign: "center" }}>
+      <div className={classes.Player}>
         <Player playerNum={1} />
         {playerCards}
       </div>
@@ -74,12 +77,14 @@ const Table = (props) => {
         suit={hitCard[0]}
         number={hitCard[1]}
         path={hitCard[2]}
+        player={true}
       />,
     ]);
+    audio.play();
     let playerHand = countCards(playerCards) + hitCard[1];
     if (playerHand > 21) {
       setDealerBlackCard(false);
-      await timeout(600);
+      await timeout(1200);
       let losses = playerAccount - betRound;
       setPlayerAccount(losses);
       setRound("endgame-loss");
@@ -123,6 +128,7 @@ const Table = (props) => {
             path={temp[2]}
           />,
         ]);
+        audio.play();
       }
 
       // Cards - Dealer
@@ -138,38 +144,44 @@ const Table = (props) => {
             path={temp[2]}
           />,
         ]);
+        audio.play();
       }
     }
   } else {
-    // Deal Player and Dealer hands
-    if (playerCards.length < 2 && dealerCards.length < 1) {
-      // Cards - Player
-      for (let i = 0; i < 2; i++) {
-        let temp = playerDeck.deal();
-        setPlayerCards((playerCards) => [
-          ...playerCards,
-          <Card
-            key={`player-${i} + ${temp[0]}`}
-            suit={temp[0]}
-            number={temp[1]}
-            path={temp[2]}
-          />,
-        ]);
-      }
+    if (betRound) {
+      // Deal Player and Dealer hands
+      if (playerCards.length < 2 && dealerCards.length < 1) {
+        // Cards - Player
+        for (let i = 0; i < 2; i++) {
+          let temp = playerDeck.deal();
+          setPlayerCards((playerCards) => [
+            ...playerCards,
+            <Card
+              key={`player-${i} + ${temp[0]}`}
+              suit={temp[0]}
+              number={temp[1]}
+              path={temp[2]}
+              player={true}
+            />,
+          ]);
+          audio.play();
+        }
 
-      // Cards - Dealer
-      for (let i = 0; i < 2; i++) {
-        let temp = dealerDeck.deal();
-        setDealerCards((dealerCards) => [
-          ...dealerCards,
-          <Card
-            back={i === 1 ? dealerBlackCard : false}
-            key={`dealer-${i} + ${temp[0]}`}
-            suit={temp[0]}
-            number={temp[1]}
-            path={temp[2]}
-          />,
-        ]);
+        // Cards - Dealer
+        for (let i = 0; i < 2; i++) {
+          let temp = dealerDeck.deal();
+          setDealerCards((dealerCards) => [
+            ...dealerCards,
+            <Card
+              back={i === 1 ? dealerBlackCard : false}
+              key={`dealer-${i} + ${temp[0]}`}
+              suit={temp[0]}
+              number={temp[1]}
+              path={temp[2]}
+            />,
+          ]);
+          audio.play();
+        }
       }
     }
   }
@@ -249,6 +261,9 @@ const Table = (props) => {
                 path={dealerCards[1].props.path}
               />,
             ]}
+      </div>
+      <div className={classes.Deck}>
+        <Card deck={true} back={true} />
       </div>
       {players}
       {/* <div>{player2Cards ? player2Cards : null}</div> */}

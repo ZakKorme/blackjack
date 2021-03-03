@@ -9,7 +9,7 @@
   padding: 8%; */
   background-color: green;
   height: 500px;
-  width: 80%;
+  width: 70%;
   border-radius: 50%;
   margin: 0 auto;
   border: 1em solid black;
@@ -17,6 +17,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  padding-top: 2%;
 }
 
 .Btn {
@@ -34,4 +35,14 @@
 .Btn:hover {
   color: rgb(202, 60, 60);
   background: white;
+}
+
+.Deck {
+  padding-left: 70%;
+  margin-bottom: 0px;
+  position: relative;
+}
+
+.Player {
+  text-align: center;
 }

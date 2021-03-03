@@ -1,5 +1,6 @@
 import classes from "./Card.module.css";
-import backCard from "../../assets/Cards/cardBack_blue.png";
+import frontCard from "../../assets/Cards/cardBack_blue.png";
+import classNames from "classnames";
 
 import clubs02 from "../../assets/Cards/card_clubs_02.png";
 import clubs03 from "../../assets/Cards/card_clubs_03.png";
@@ -58,12 +59,15 @@ import heartsK from "../../assets/Cards/card_hearts_K.png";
 import heartsA from "../../assets/Cards/card_hearts_A.png";
 
 const Card = (props) => {
-  let style = props.back ? classes.Back : classes.Card;
   let suit = null;
-
+  let animationClasses = props.player
+    ? classes.playerAnimation
+    : props.deck
+    ? null
+    : classes.dealerAnimation;
   let cardType = props.path ? props.path.split(" ")[0] : null;
 
-  if (props.suit && !props.back) {
+  if (props.suit) {
     switch (props.suit) {
       case "clubs":
         switch (cardType) {
@@ -251,10 +255,25 @@ const Card = (props) => {
   }
 
   if (props.back) {
-    suit = <img src={backCard} alt="backCard" />;
+    suit = <img src={frontCard} alt="frontCard" />;
   }
 
-  return <div className={classes.Card}>{suit}</div>;
+  if (props.dealer) {
+  } else {
+  }
+
+  return (
+    <div className={`${classes.container}`}>
+      <div className={`${classes.playingCard} `}>
+        <div className={`${classes.FlipCard} ${animationClasses}`}>
+          <div className={classes.Front}>
+            <img src={frontCard} alt="frontCard" />
+          </div>
+          <div className={classes.Back}>{suit}</div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Card;
