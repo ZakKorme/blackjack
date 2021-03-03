@@ -1,0 +1,88 @@
+.BetAmount5 {
+  display: inline-flex;
+  justify-content: center;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 1%;
+  background-color: rgb(31, 210, 31);
+  color: azure;
+}
+
+.BetAmount10 {
+  display: inline-flex;
+  justify-content: center;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 1%;
+  background-color: rgb(32, 193, 32);
+  color: azure;
+}
+
+.BetAmount20 {
+  display: inline-flex;
+  justify-content: center;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 1%;
+  background-color: rgb(17, 174, 17);
+  color: azure;
+}
+.BetAmount50 {
+  display: inline-flex;
+  justify-content: center;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 1%;
+  background-color: rgb(17, 154, 17);
+  color: azure;
+}
+.BetAmount100 {
+  display: inline-flex;
+  justify-content: center;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 1%;
+  background-color: rgb(7, 140, 7);
+  color: azure;
+}
+.Form {
+  display: block;
+  flex-direction: row;
+  padding-top: 20px;
+  padding-left: 2px;
+}
+
+.Btn {
+  margin: 10px;
+}
+
+.Warning {
+  display: block;
+}
+
+.BetAmount5:hover {
+  color: rgb(32, 193, 32);
+  background-color: white;
+  border: 1px solid rgb(32, 193, 32);
+}
+
+.BetAmount10:hover {
+  color: rgb(32, 193, 32);
+  background-color: white;
+  border: 1px solid rgb(32, 193, 32);
+}
+.BetAmount20:hover {
+  color: rgb(32, 193, 32);
+  background-color: white;
+  border: 1px solid rgb(32, 193, 32);
+}
+.BetAmount50:hover {
+  color: rgb(32, 193, 32);
+  background-color: white;
+  border: 1px solid rgb(32, 193, 32);
+}
+.BetAmount100:hover {
+  color: rgb(32, 193, 32);
+  background-color: white;
+  border: 1px solid rgb(32, 193, 32);
+}

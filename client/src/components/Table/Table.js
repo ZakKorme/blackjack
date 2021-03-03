@@ -47,13 +47,14 @@ const Table = (props) => {
   player2Deck.shuffle();
 
   // MODAL FUNCTIONS
-  const modalHandler = () => {
+  const modalHandler = (bet) => {
+    setBetRound(bet);
     setShowModal(!showModal);
   };
 
-  const onBetModalHandler = (e) => {
-    e.preventDefault();
-    setBetRound(e.target.value);
+  const onBetModalHandler = (value) => {
+    console.log(value);
+    setBetRound(value);
   };
 
   // GAME HANDLERS
@@ -228,7 +229,7 @@ const Table = (props) => {
       <ModalCustom
         round={round}
         showModal={showModal}
-        playerAccount={numberWithCommas(playerAccount)}
+        playerAccount={playerAccount}
         betRound={betRound}
         betHandler={onBetModalHandler}
         modalHandler={modalHandler}
