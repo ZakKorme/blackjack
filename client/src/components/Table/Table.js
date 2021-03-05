@@ -26,7 +26,10 @@ const Table = (props) => {
   const [showModal, setShowModal] = useState(true);
 
   const [betRound, setBetRound] = useState(0);
-  const [round, setRound] = useState("start");
+  const [betRound2, setBetRound2] = useState(0);
+  const [round, setRound] = useState(
+    props.players < 2 ? "start" : "start-multiplayer"
+  );
 
   const audio = new Audio(cardSound);
 
@@ -37,11 +40,20 @@ const Table = (props) => {
         {playerCards}
       </div>
     ) : (
-      <div style={{ paddingTop: "100px" }}>
-        <Player playerNum={1} />
-        {playerCards}
-        <Player playerNum={2} />
-        {player2Cards}
+      <div style={{ display: "inline-flex" }}>
+        <div
+        // style={{ transform: "skew(10deg, 0.5deg)", paddingRight: "100px" }}
+        >
+          <Player playerNum={1} />
+          {playerCards}
+        </div>
+
+        <div
+        // style={{ transform: "skew(0.5deg, 10deg)", paddingRight: "100px" }}
+        >
+          <Player playerNum={2} />
+          {player2Cards}
+        </div>
       </div>
     );
 
@@ -50,8 +62,10 @@ const Table = (props) => {
   player2Deck.shuffle();
 
   // MODAL FUNCTIONS
-  const modalHandler = (bet) => {
+  const modalHandler = (bet, bet2) => {
     setBetRound(bet);
+    setBetRound2(bet2);
+
     setShowModal(!showModal);
   };
 
@@ -104,47 +118,51 @@ const Table = (props) => {
       dealerCards.length < 1
     ) {
       // Cards - Player1
-      for (let i = 0; i < 2; i++) {
-        let temp = playerDeck.deal();
-        setPlayerCards((playerCards) => [
-          ...playerCards,
-          <Card
-            key={`player-${i} + ${temp[0]}`}
-            suit={temp[0]}
-            number={temp[1]}
-            path={temp[2]}
-          />,
-        ]);
-      }
-      // Cards - Player2
-      for (let i = 0; i < 2; i++) {
-        let temp = player2Deck.deal();
-        setPlayer2Cards((player2Cards) => [
-          ...player2Cards,
-          <Card
-            key={`player-${i} + ${temp[0]}`}
-            suit={temp[0]}
-            number={temp[1]}
-            path={temp[2]}
-          />,
-        ]);
-        audio.play();
-      }
+      if (betRound && betRound2) {
+        for (let i = 0; i < 2; i++) {
+          let temp = playerDeck.deal();
+          setPlayerCards((playerCards) => [
+            ...playerCards,
+            <Card
+              key={`player-${i} + ${temp[0]}`}
+              suit={temp[0]}
+              number={temp[1]}
+              path={temp[2]}
+              player={true}
+            />,
+          ]);
+        }
+        // Cards - Player2
+        for (let i = 0; i < 2; i++) {
+          let temp = player2Deck.deal();
+          setPlayer2Cards((player2Cards) => [
+            ...player2Cards,
+            <Card
+              key={`player-${i} + ${temp[0]}`}
+              suit={temp[0]}
+              number={temp[1]}
+              path={temp[2]}
+              player={true}
+            />,
+          ]);
+          audio.play();
+        }
 
-      // Cards - Dealer
-      for (let i = 0; i < 2; i++) {
-        let temp = dealerDeck.deal();
-        setDealerCards((dealerCards) => [
-          ...dealerCards,
-          <Card
-            back={i === 1 ? dealerBlackCard : false}
-            key={`dealer-${i} + ${temp[0]}`}
-            suit={temp[0]}
-            number={temp[1]}
-            path={temp[2]}
-          />,
-        ]);
-        audio.play();
+        // Cards - Dealer
+        for (let i = 0; i < 2; i++) {
+          let temp = dealerDeck.deal();
+          setDealerCards((dealerCards) => [
+            ...dealerCards,
+            <Card
+              back={i === 1 ? dealerBlackCard : false}
+              key={`dealer-${i} + ${temp[0]}`}
+              suit={temp[0]}
+              number={temp[1]}
+              path={temp[2]}
+            />,
+          ]);
+          audio.play();
+        }
       }
     }
   } else {
@@ -242,7 +260,9 @@ const Table = (props) => {
         round={round}
         showModal={showModal}
         playerAccount={playerAccount}
+        playerAccount2={playerAccount2}
         betRound={betRound}
+        betRound2={betRound2}
         betHandler={onBetModalHandler}
         modalHandler={modalHandler}
         playAgainHandler={playAgainHandler}
@@ -266,7 +286,6 @@ const Table = (props) => {
         <Card deck={true} back={true} />
       </div>
       {players}
-      {/* <div>{player2Cards ? player2Cards : null}</div> */}
       <h4 style={{ textAlign: "right", paddingTop: "50px" }}>
         Amount: ${numberWithCommas(playerAccount)} -- You've bet $
         {numberWithCommas(betRound)} this round

@@ -25,24 +25,36 @@ const Multiplayer = (props) => {
   };
 
   let game = (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-around",
-      }}
-    >
-      <div style={{ textAlign: "center", paddingTop: "10%" }}>
-        <h4> Player 1 : How much will you be playing with today?</h4>
-        <input type="number" placeholder={"$"} onChange={onBetHandlerPlayer1} />
+    <div>
+      <div
+        style={{
+          display: "inline-flex",
+          justifyContent: "space-evenly",
+          paddingLeft: "26%",
+          paddingRight: "26%",
+        }}
+      >
+        <div style={{ textAlign: "center", padding: "10%" }}>
+          <h4> Player 1 : How much will you be playing with today?</h4>
+          <input
+            type="number"
+            placeholder={"$"}
+            onChange={onBetHandlerPlayer1}
+          />
+        </div>
+        <div style={{ textAlign: "center", paddingTop: "10%" }}>
+          <h4> Player 2 : How much will you be playing with today?</h4>
+          <input
+            type="number"
+            placeholder={"$"}
+            onChange={onBetHandlerPlayer2}
+          />
+        </div>
       </div>
-      <div style={{ textAlign: "center", paddingTop: "10%" }}>
-        <h4> Player 2 : How much will you be playing with today?</h4>
-        <input type="number" placeholder={"$"} onChange={onBetHandlerPlayer2} />
-      </div>
-      <div style={{ textAlign: "center", paddingTop: "10%" }}>
+      <div style={{ marginTop: "5%", marginLeft: "46%" }}>
         <button
-          disabled={betPlayer1 && betPlayer2 ? false : true}
           className={classes.Btn}
+          disabled={betPlayer1 && betPlayer2 ? false : true}
           onClick={onGameStart}
         >
           <strong>We're Ready to Play</strong>

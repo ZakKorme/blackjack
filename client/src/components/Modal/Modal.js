@@ -20,6 +20,9 @@ const modalStyle = {
 const ModalCustom = (props) => {
   const [bet, setBet] = useState(0);
   const [betError, setBetError] = useState(false);
+  const [bet2, setBet2] = useState(0);
+  const [betError2, setBetError2] = useState(false);
+
   let modal = null;
 
   const validateBet = (e) => {
@@ -45,7 +48,29 @@ const ModalCustom = (props) => {
       setBetError(false);
     }
   };
+  const validateBet2 = (e) => {
+    let runningTotal = bet2 + Number(e.target.id);
+    let playerAccount = Number(props.playerAccount2);
 
+    if (runningTotal > playerAccount) {
+      setBetError2(true);
+      console.log("exceeded funds");
+    } else {
+      let temp = Number(e.target.id);
+      if (temp === 5) {
+        setBet2(Number(bet2 + 5));
+      } else if (temp === 10) {
+        setBet2(bet2 + 10);
+      } else if (temp === 20) {
+        setBet2(bet2 + 20);
+      } else if (temp === 50) {
+        setBet2(bet2 + 50);
+      } else if (temp === 100) {
+        setBet2(bet2 + 100);
+      }
+      setBetError2(false);
+    }
+  };
   if (props.round) {
     switch (props.round) {
       case "start":
@@ -75,16 +100,6 @@ const ModalCustom = (props) => {
             >
               $100
             </span>
-
-            {/* <form className={classes.Form}>
-              {/* <input
-                type="number"
-                placeholder={"$"}
-                onChange={props.betHandler}
-              /> */}
-            {/* <button onClick={props.modalHandler}>Lets Play!</button>
-              <button>Cancel</button> */}
-            {/* </form>  */}
             <div className={classes.Form}>
               {betError ? (
                 <span style={{ color: "red", display: "block" }}>
@@ -111,6 +126,110 @@ const ModalCustom = (props) => {
             </div>
           </Modal>
         );
+        break;
+      case "start-multiplayer":
+        modal = (
+          <Modal isOpen={props.showModal} style={modalStyle}>
+            <h2>How much would you like to bet on this round Player 1?</h2>
+            <p>
+              <strong>Your funds are below:</strong>
+            </p>
+            <p>${numberWithCommas(props.playerAccount)}</p>
+            <span id={5} className={classes.BetAmount5} onClick={validateBet}>
+              $5
+            </span>
+            <span id={10} className={classes.BetAmount10} onClick={validateBet}>
+              $10
+            </span>
+            <span id={20} className={classes.BetAmount20} onClick={validateBet}>
+              $20
+            </span>
+            <span id={50} className={classes.BetAmount50} onClick={validateBet}>
+              $50
+            </span>
+            <span
+              id={100}
+              className={classes.BetAmount100}
+              onClick={validateBet}
+            >
+              $100
+            </span>
+            <div className={classes.Form}>
+              {betError ? (
+                <span style={{ color: "red", display: "block" }}>
+                  Insufficient Funds
+                </span>
+              ) : null}
+              {bet ? (
+                <span>
+                  <strong>Bet:</strong> $
+                </span>
+              ) : null}
+              <span>{bet ? numberWithCommas(bet) : null}</span>
+            </div>
+            <h2>How much would you like to bet on this round Player 2?</h2>
+            <p>
+              <strong>Your funds are below:</strong>
+            </p>
+            <p>${numberWithCommas(props.playerAccount2)}</p>
+            <span id={5} className={classes.BetAmount5} onClick={validateBet2}>
+              $5
+            </span>
+            <span
+              id={10}
+              className={classes.BetAmount10}
+              onClick={validateBet2}
+            >
+              $10
+            </span>
+            <span
+              id={20}
+              className={classes.BetAmount20}
+              onClick={validateBet2}
+            >
+              $20
+            </span>
+            <span
+              id={50}
+              className={classes.BetAmount50}
+              onClick={validateBet2}
+            >
+              $50
+            </span>
+            <span
+              id={100}
+              className={classes.BetAmount100}
+              onClick={validateBet2}
+            >
+              $100
+            </span>
+            <div className={classes.Form}>
+              {betError2 ? (
+                <span style={{ color: "red", display: "block" }}>
+                  Insufficient Funds
+                </span>
+              ) : null}
+              {bet2 ? (
+                <span>
+                  <strong>Bet:</strong> $
+                </span>
+              ) : null}
+              <span>{bet2 ? numberWithCommas(bet2) : null}</span>
+              {bet2 ? (
+                <button
+                  className={classes.Btn}
+                  onClick={() => {
+                    setBet(0);
+                    props.modalHandler(bet, bet2);
+                  }}
+                >
+                  Lets play!
+                </button>
+              ) : null}
+            </div>
+          </Modal>
+        );
+
         break;
       case "endgame-win":
         modal = (
