@@ -17,14 +17,17 @@ const Table = (props) => {
   const [playerCards, setPlayerCards] = useState([]);
   const [playerDeck] = useState(new Deck());
   const [playerAccount, setPlayerAccount] = useState(props.bet1);
+  const [playerEndGame, setPlayerEndGame] = useState(false);
 
   const [player2Cards, setPlayer2Cards] = useState([]);
   const [player2Deck] = useState(new Deck());
   const [playerAccount2, setPlayerAccount2] = useState(props.bet2);
+  const [player2EndGame, setPlayer2EndGame] = useState(false);
 
   const [disableBtn] = useState(false);
   const [showModal, setShowModal] = useState(true);
 
+  const [turn, setTurn] = useState(props.players > 1 ? "Player 1" : null);
   const [betRound, setBetRound] = useState(0);
   const [betRound2, setBetRound2] = useState(0);
   const [round, setRound] = useState(
@@ -32,6 +35,9 @@ const Table = (props) => {
   );
 
   const audio = new Audio(cardSound);
+  const style = props.players > 1 ? classes.Table2 : classes.Table;
+  const style2 = playerEndGame ? classes.EndGame : null;
+  const style3 = player2EndGame ? classes.EndGame : null;
 
   let players =
     props.players < 2 ? (
@@ -83,30 +89,87 @@ const Table = (props) => {
 
   const hitHandler = async () => {
     let hitCard = playerDeck.deal();
+    let hitCard2 = player2Deck.deal();
 
-    await setPlayerCards((playerCards) => [
-      ...playerCards,
-      <Card
-        key={`player-${playerCards.length + 1} + ${hitCard[0]}`}
-        suit={hitCard[0]}
-        number={hitCard[1]}
-        path={hitCard[2]}
-        player={true}
-      />,
-    ]);
-    audio.play();
-    let playerHand = countCards(playerCards) + hitCard[1];
-    if (playerHand > 21) {
-      setDealerBlackCard(false);
-      await timeout(1200);
-      let losses = playerAccount - betRound;
-      setPlayerAccount(losses);
-      setRound("endgame-loss");
-      setShowModal(!showModal);
-      playerDeck.reset();
-      playerDeck.shuffle();
-      dealerDeck.reset();
-      dealerDeck.shuffle();
+    if (turn && turn === "Player 1" && !playerEndGame) {
+      await setPlayerCards((playerCards) => [
+        ...playerCards,
+        <Card
+          key={`player-${playerCards.length + 1} + ${hitCard[0]}`}
+          suit={hitCard[0]}
+          number={hitCard[1]}
+          path={hitCard[2]}
+          player={true}
+        />,
+      ]);
+      audio.play();
+      let playerHand = countCards(playerCards) + hitCard[1];
+      if (playerHand > 21) {
+        setDealerBlackCard(false);
+        await timeout(1200);
+        let losses = playerAccount - betRound;
+        setPlayerAccount(losses);
+        setRound("endgame-loss-player1");
+        setPlayerEndGame(true);
+        setShowModal(!showModal);
+        playerDeck.reset();
+        playerDeck.shuffle();
+        // dealerDeck.reset();
+        // dealerDeck.shuffle();
+      }
+      if (!player2EndGame) setTurn("Player 2");
+    } else if (turn && turn === "Player 2" && !player2EndGame) {
+      await setPlayer2Cards((player2Cards) => [
+        ...player2Cards,
+        <Card
+          key={`player-${player2Cards.length + 1} + ${hitCard2[0]}`}
+          suit={hitCard2[0]}
+          number={hitCard2[1]}
+          path={hitCard2[2]}
+          player={true}
+        />,
+      ]);
+      audio.play();
+      let playerHand = countCards(player2Cards) + hitCard2[1];
+      if (playerHand > 21) {
+        setDealerBlackCard(false);
+        await timeout(1200);
+        let losses = playerAccount2 - betRound2;
+        setPlayerAccount2(losses);
+        setRound("endgame-loss-player2");
+        setPlayer2EndGame(true);
+        setShowModal(!showModal);
+        playerDeck.reset();
+        playerDeck.shuffle();
+        // dealerDeck.reset();
+        // dealerDeck.shuffle();
+      }
+      if (!playerEndGame) setTurn("Player 1");
+    } else {
+      await setPlayerCards((playerCards) => [
+        ...playerCards,
+        <Card
+          key={`player-${playerCards.length + 1} + ${hitCard[0]}`}
+          suit={hitCard[0]}
+          number={hitCard[1]}
+          path={hitCard[2]}
+          player={true}
+        />,
+      ]);
+      audio.play();
+      let playerHand = countCards(playerCards) + hitCard[1];
+      if (playerHand > 21) {
+        setDealerBlackCard(false);
+        await timeout(1200);
+        let losses = playerAccount - betRound;
+        setPlayerAccount(losses);
+        setRound("endgame-loss");
+        setShowModal(!showModal);
+        playerDeck.reset();
+        playerDeck.shuffle();
+        dealerDeck.reset();
+        dealerDeck.shuffle();
+      }
     }
   };
 
@@ -206,43 +269,93 @@ const Table = (props) => {
 
   const isWinner = async () => {
     let playerHand = countCards(playerCards);
+    let player2Hand = countCards(player2Cards);
     let dealerHand = countCards(dealerCards);
 
     //Show Dealer card
 
-    if (playerHand > dealerHand && playerHand <= 21) {
-      setDealerBlackCard(false);
-      await timeout(600);
+    if (props.players > 1) {
+      if (player2EndGame && !playerEndGame) {
+        if (playerHand > dealerHand && playerHand <= 21) {
+          setDealerBlackCard(false);
+          await timeout(600);
 
-      let winnings = Number(playerAccount) + betRound * 1.5;
-      setPlayerAccount(winnings);
-      setRound("endgame-win");
-      setShowModal(!showModal);
+          let winnings = Number(playerAccount) + betRound * 1.5;
+          setPlayerAccount(winnings);
+          setRound("endgame-win");
+          setShowModal(!showModal);
 
-      playerDeck.reset();
-      playerDeck.shuffle();
-      dealerDeck.reset();
-      dealerDeck.shuffle();
-    } else {
-      setDealerBlackCard(false);
-      await timeout(600);
+          playerDeck.reset();
+          playerDeck.shuffle();
+          dealerDeck.reset();
+          dealerDeck.shuffle();
+        }
+      } else if (playerEndGame && !player2EndGame) {
+        if (player2Hand > dealerHand && player2Hand <= 21) {
+          setDealerBlackCard(false);
+          await timeout(600);
 
-      let losses = Number(playerAccount) - betRound;
-      setPlayerAccount(losses);
-      setRound("endgame-loss");
-      setShowModal(!showModal);
+          let winnings = Number(playerAccount2) + betRound2 * 1.5;
+          setPlayerAccount(winnings);
+          setRound("endgame-win");
+          setShowModal(!showModal);
 
-      playerDeck.reset();
-      playerDeck.shuffle();
-      dealerDeck.reset();
-      dealerDeck.shuffle();
+          playerDeck.reset();
+          playerDeck.shuffle();
+          dealerDeck.reset();
+          dealerDeck.shuffle();
+        }
+      } else {
+        if (playerHand > dealerHand && playerHand <= 21) {
+          setDealerBlackCard(false);
+          await timeout(600);
+
+          let winnings = Number(playerAccount) + betRound * 1.5;
+          setPlayerAccount(winnings);
+          setRound("endgame-win");
+          setShowModal(!showModal);
+
+          playerDeck.reset();
+          playerDeck.shuffle();
+          dealerDeck.reset();
+          dealerDeck.shuffle();
+        } else {
+          setDealerBlackCard(false);
+          await timeout(600);
+
+          let losses = Number(playerAccount) - betRound;
+          setPlayerAccount(losses);
+          setRound("endgame-loss");
+          setShowModal(!showModal);
+
+          playerDeck.reset();
+          playerDeck.shuffle();
+          dealerDeck.reset();
+          dealerDeck.shuffle();
+        }
+      }
     }
   };
-
   const playAgainHandler = () => {
     if (playerAccount <= 0) {
       setRound("out-of-money");
       setBetRound(0);
+      setShowModal(true);
+    } else if (playerAccount <= 0 || playerAccount2 <= 0) {
+      setRound("out-of-money");
+      setBetRound(0);
+      setShowModal(true);
+    } else if (props.players > 1) {
+      setDealerBlackCard(true);
+      setRound("start-multiplayer");
+      setTurn("Player 1");
+      setPlayerCards([]);
+      setPlayer2Cards([]);
+      setDealerCards([]);
+      setPlayerEndGame(false);
+      setPlayer2EndGame(false);
+      setBetRound(0);
+      setBetRound2(0);
       setShowModal(true);
     } else {
       setDealerBlackCard(true);
@@ -253,9 +366,15 @@ const Table = (props) => {
       setShowModal(true);
     }
   };
-
+  const continueHandler = () => {
+    if (playerEndGame && player2EndGame) {
+      setRound("endgame-multiplayer-loss");
+    } else {
+      setShowModal(!showModal);
+    }
+  };
   return (
-    <div className={classes.Table}>
+    <div className={style}>
       <ModalCustom
         round={round}
         showModal={showModal}
@@ -266,6 +385,7 @@ const Table = (props) => {
         betHandler={onBetModalHandler}
         modalHandler={modalHandler}
         playAgainHandler={playAgainHandler}
+        continueHandler={continueHandler}
       />
       <Dealer />
       <div>
@@ -283,13 +403,47 @@ const Table = (props) => {
             ]}
       </div>
       <div className={classes.Deck}>
+        <h6
+          style={{
+            margin: "0px",
+            fontSize: "15px",
+            textAlign: "center",
+            color: "rgb(240, 240, 240)",
+          }}
+        >
+          Turn: {turn}
+        </h6>
         <Card deck={true} back={true} />
       </div>
       {players}
-      <h4 style={{ textAlign: "right", paddingTop: "50px" }}>
-        Amount: ${numberWithCommas(playerAccount)} -- You've bet $
-        {numberWithCommas(betRound)} this round
-      </h4>
+      {props.players < 2 ? (
+        <h4 style={{ textAlign: "right", paddingTop: "50px", fontSize: "2px" }}>
+          Amount: ${numberWithCommas(playerAccount)} -- You've bet $
+          {numberWithCommas(betRound)} this round
+        </h4>
+      ) : (
+        <div>
+          <h4
+            className={style2}
+            style={{
+              textAlign: "right",
+              paddingTop: "50px",
+              fontSize: "15px",
+              paddingLeft: "0px",
+            }}
+          >
+            Player 1 - Total: ${numberWithCommas(playerAccount)} -- You've bet $
+            {numberWithCommas(betRound)} this round
+          </h4>
+          <h4
+            className={style3}
+            style={{ textAlign: "right", paddingTop: "1px", fontSize: "15px" }}
+          >
+            Player 2 - Total: ${numberWithCommas(playerAccount2)} -- You've bet
+            ${numberWithCommas(betRound2)} this round
+          </h4>
+        </div>
+      )}
       <button
         className={classes.Btn}
         onClick={hitHandler}

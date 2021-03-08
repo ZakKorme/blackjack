@@ -246,6 +246,21 @@ const ModalCustom = (props) => {
           </Modal>
         );
         break;
+      case "endgame-win-multiplayer":
+        modal = (
+          <Modal isOpen={props.showModal} style={modalStyle}>
+            <h2>You've won!</h2>
+            <p>We've added the following to your account</p>
+            <p style={{ color: "green" }}>${props.betRound * 1.5}</p>
+            <form>
+              <button onClick={props.playAgainHandler}>Lets Play Again!</button>
+              <Link to={"/"}>
+                <button>End Game</button>
+              </Link>
+            </form>
+          </Modal>
+        );
+        break;
       case "endgame-loss":
         modal = (
           <Modal isOpen={props.showModal} style={modalStyle}>
@@ -257,6 +272,51 @@ const ModalCustom = (props) => {
               <Link to={"/"}>
                 <button>End Game</button>
               </Link>
+            </form>
+          </Modal>
+        );
+        break;
+      case "endgame-multiplayer-loss":
+        modal = (
+          <Modal isOpen={props.showModal} style={modalStyle}>
+            <h2>You've both lost...</h2>
+            <form>
+              <button
+                onClick={() => {
+                  setBet(0);
+                  setBet2(0);
+                  props.playAgainHandler();
+                }}
+              >
+                Lets Play Again!
+              </button>
+              <Link to={"/"}>
+                <button>End Game</button>
+              </Link>
+            </form>
+          </Modal>
+        );
+        break;
+      case "endgame-loss-player1":
+        modal = (
+          <Modal isOpen={props.showModal} style={modalStyle}>
+            <h2>You've lost Player 1...</h2>
+            <p>We've deducted the following from your account</p>
+            <p style={{ color: "red" }}>${props.betRound}</p>
+            <form>
+              <button onClick={props.continueHandler}>Continue</button>
+            </form>
+          </Modal>
+        );
+        break;
+      case "endgame-loss-player2":
+        modal = (
+          <Modal isOpen={props.showModal} style={modalStyle}>
+            <h2>You've lost Player 2...</h2>
+            <p>We've deducted the following from your account</p>
+            <p style={{ color: "red" }}>${props.betRound2}</p>
+            <form>
+              <button onClick={props.continueHandler}>Continue</button>
             </form>
           </Modal>
         );

@@ -62,11 +62,11 @@
 }
 
 .Front {
-  background-color: green;
+  /* background-color: green; */
   transform: rotateY(180deg);
 }
 .Back {
-  background-color: green;
+  /* background-color: green; */
 }
 
 .Front img,

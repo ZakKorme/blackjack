@@ -1,16 +1,22 @@
 .Table {
-  /* display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  border: solid 2px black;
-  border-radius: 4px;
-  margin: 5%;
-  padding: 8%; */
   background-color: green;
   height: 500px;
   width: 70%;
   border-radius: 50%;
+  margin: 0 auto;
+  border: 1em solid black;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 2%;
+}
+
+.Table2 {
+  background-color: green;
+  height: 500px;
+  width: 80%;
+  border-radius: 30%;
   margin: 0 auto;
   border: 1em solid black;
   display: flex;
@@ -45,4 +51,8 @@
 
 .Player {
   text-align: center;
+}
+
+.EndGame {
+  text-decoration: line-through;
 }
