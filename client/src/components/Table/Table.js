@@ -105,7 +105,6 @@ const Table = (props) => {
       audio.play();
       let playerHand = countCards(playerCards) + hitCard[1];
       if (playerHand > 21) {
-        setDealerBlackCard(false);
         await timeout(1200);
         let losses = playerAccount - betRound;
         setPlayerAccount(losses);
@@ -114,8 +113,6 @@ const Table = (props) => {
         setShowModal(!showModal);
         playerDeck.reset();
         playerDeck.shuffle();
-        // dealerDeck.reset();
-        // dealerDeck.shuffle();
       }
       if (!player2EndGame) setTurn("Player 2");
     } else if (turn && turn === "Player 2" && !player2EndGame) {
@@ -132,7 +129,6 @@ const Table = (props) => {
       audio.play();
       let playerHand = countCards(player2Cards) + hitCard2[1];
       if (playerHand > 21) {
-        setDealerBlackCard(false);
         await timeout(1200);
         let losses = playerAccount2 - betRound2;
         setPlayerAccount2(losses);
@@ -141,8 +137,6 @@ const Table = (props) => {
         setShowModal(!showModal);
         playerDeck.reset();
         playerDeck.shuffle();
-        // dealerDeck.reset();
-        // dealerDeck.shuffle();
       }
       if (!playerEndGame) setTurn("Player 1");
     } else {
