@@ -16,7 +16,7 @@ In the following application users will be able to a play a game of black jack w
 
 ## Example
 #### Singleplayer
-![React App](https://user-images.githubusercontent.com/38298940/108430320-32f62480-720f-11eb-97cf-b9cc6eb5fa9c.gif)
+![React App (1)](https://user-images.githubusercontent.com/38298940/111365183-8d48a080-8668-11eb-85aa-04172210aff8.gif)
 #### Multiplayer
 
 
