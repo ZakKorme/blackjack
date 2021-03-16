@@ -20,7 +20,7 @@ In the following application users will be able to a play a game of black jack w
 
 
 Rules:
-  1) Enter dollar amount you'll be playing the game with
+  1) Enter dollar amount you'll be playing with
   2) Select bet amount for round
   3) Hit : add card to players hand
   4) Stand : End round
