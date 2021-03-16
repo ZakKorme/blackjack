@@ -15,10 +15,10 @@ In the following application users will be able to a play a game of black jack w
 
 
 ## Example
-Single Player:
+#### Singleplayer
 ![React App](https://user-images.githubusercontent.com/38298940/108430320-32f62480-720f-11eb-97cf-b9cc6eb5fa9c.gif)
+#### Multiplayer
 
-Multiplayer:
 
 
 
