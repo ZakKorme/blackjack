@@ -40,7 +40,6 @@ const Table = (props) => {
   const style = props.players > 1 ? classes.Table2 : classes.Table;
   const style2 = playerEndGame ? classes.EndGame : null;
   const style3 = player2EndGame ? classes.EndGame : null;
-  const playerBorder = classes.playerBorder;
 
   let players =
     props.players < 2 ? (
@@ -52,12 +51,28 @@ const Table = (props) => {
       <div style={{ display: "inline-flex" }}>
         <div>
           <Player playerNum={1} />
-          <div className={playerBorder}>{playerCards}</div>
+          <div
+            style={{
+              border: "1px solid",
+              borderColor: "rgb(48, 145, 78)",
+              borderRadius: "5px",
+            }}
+          >
+            {playerCards}
+          </div>
         </div>
 
         <div>
           <Player playerNum={2} />
-          <div className={playerBorder}>{player2Cards}</div>
+          <div
+            style={{
+              border: "1px solid",
+              borderColor: "rgb(48, 145, 78)",
+              borderRadius: "5px",
+            }}
+          >
+            {player2Cards}
+          </div>
         </div>
       </div>
     );
