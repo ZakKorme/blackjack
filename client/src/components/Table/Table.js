@@ -5,6 +5,7 @@ import Card from "../Card/Card";
 import classes from "./Table.module.css";
 import { useState } from "react";
 import ModalCustom from "../Modal/Modal";
+import SubTitle from "../SubTitle/SubTitle";
 import numberWithCommas from "../../util/numberformat";
 import timeout from "../../util/timeout";
 import cardSound from "../../assets/240777__f4ngy__dealing-card.wav";
@@ -296,8 +297,6 @@ const Table = (props) => {
     let player2Hand = countCards(player2Cards);
     let dealerHand = countCards(dealerCards);
 
-    //Show Dealer card
-
     if (props.players > 1) {
       if (player2EndGame && !playerEndGame) {
         if (playerHand > dealerHand && playerHand <= 21) {
@@ -448,10 +447,6 @@ const Table = (props) => {
     }
   };
   const continueHandler = () => {
-    console.log("Player 1 EndGame:", playerEndGame);
-    console.log("Player 1 HasWon:", playerHasWon);
-    console.log("Player 2 EndGame:", player2EndGame);
-    console.log("Player 2 HasWon:", player2HasWon);
     if (playerEndGame && player2EndGame) {
       if (playerHasWon && player2HasWon) {
         setRound("endgame-win-multiplayer");
@@ -516,36 +511,15 @@ const Table = (props) => {
         <Card deck={true} back={true} />
       </div>
       {players}
-      {props.players < 2 ? (
-        <h4
-          style={{ textAlign: "right", paddingTop: "50px", fontSize: "15px" }}
-        >
-          Amount: ${numberWithCommas(playerAccount)} -- You've bet $
-          {numberWithCommas(betRound)} this round
-        </h4>
-      ) : (
-        <div>
-          <h4
-            className={style2}
-            style={{
-              textAlign: "right",
-              paddingTop: "50px",
-              fontSize: "15px",
-              paddingLeft: "0px",
-            }}
-          >
-            Player 1 - Total: ${numberWithCommas(playerAccount)} -- You've bet $
-            {numberWithCommas(betRound)} this round
-          </h4>
-          <h4
-            className={style3}
-            style={{ textAlign: "right", paddingTop: "1px", fontSize: "15px" }}
-          >
-            Player 2 - Total: ${numberWithCommas(playerAccount2)} -- You've bet
-            ${numberWithCommas(betRound2)} this round
-          </h4>
-        </div>
-      )}
+      <SubTitle
+        players={props.players}
+        playerAccount={playerAccount}
+        playerAccount2={playerAccount2}
+        betRound={betRound}
+        betRound2={betRound2}
+        style2={style2}
+        style3={style3}
+      />
       <button
         className={classes.Btn}
         onClick={hitHandler}
