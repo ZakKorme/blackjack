@@ -6,7 +6,6 @@ import classes from "./Table.module.css";
 import { useState } from "react";
 import ModalCustom from "../Modal/Modal";
 import SubTitle from "../SubTitle/SubTitle";
-import numberWithCommas from "../../util/numberformat";
 import timeout from "../../util/timeout";
 import cardSound from "../../assets/240777__f4ngy__dealing-card.wav";
 
@@ -41,6 +40,7 @@ const Table = (props) => {
   const style = props.players > 1 ? classes.Table2 : classes.Table;
   const style2 = playerEndGame ? classes.EndGame : null;
   const style3 = player2EndGame ? classes.EndGame : null;
+  const playerBorder = classes.playerBorder;
 
   let players =
     props.players < 2 ? (
@@ -52,28 +52,12 @@ const Table = (props) => {
       <div style={{ display: "inline-flex" }}>
         <div>
           <Player playerNum={1} />
-          <div
-            style={{
-              border: "1px solid",
-              borderColor: "rgb(48, 145, 78)",
-              borderRadius: "5px",
-            }}
-          >
-            {playerCards}
-          </div>
+          <div className={playerBorder}>{playerCards}</div>
         </div>
 
         <div>
           <Player playerNum={2} />
-          <div
-            style={{
-              border: "1px solid",
-              borderColor: "rgb(48, 145, 78)",
-              borderRadius: "5px",
-            }}
-          >
-            {player2Cards}
-          </div>
+          <div className={playerBorder}>{player2Cards}</div>
         </div>
       </div>
     );
@@ -86,12 +70,10 @@ const Table = (props) => {
   const modalHandler = (bet, bet2) => {
     setBetRound(bet);
     setBetRound2(bet2);
-
     setShowModal(!showModal);
   };
 
   const onBetModalHandler = (value) => {
-    console.log(value);
     setBetRound(value);
   };
 

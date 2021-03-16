@@ -56,3 +56,10 @@
 .EndGame {
   text-decoration: line-through;
 }
+
+
+.playerBorder {
+  border: "1px solid";
+  border-color: rgb(48, 145, 78);
+  border-radius: "5px";
+}
