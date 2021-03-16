@@ -49,18 +49,30 @@ const Table = (props) => {
       </div>
     ) : (
       <div style={{ display: "inline-flex" }}>
-        <div
-        // style={{ transform: "skew(10deg, 0.5deg)", paddingRight: "100px" }}
-        >
+        <div>
           <Player playerNum={1} />
-          {playerCards}
+          <div
+            style={{
+              border: "1px solid",
+              borderColor: "rgb(48, 145, 78)",
+              borderRadius: "5px",
+            }}
+          >
+            {playerCards}
+          </div>
         </div>
 
-        <div
-        // style={{ transform: "skew(0.5deg, 10deg)", paddingRight: "100px" }}
-        >
+        <div>
           <Player playerNum={2} />
-          {player2Cards}
+          <div
+            style={{
+              border: "1px solid",
+              borderColor: "rgb(48, 145, 78)",
+              borderRadius: "5px",
+            }}
+          >
+            {player2Cards}
+          </div>
         </div>
       </div>
     );
