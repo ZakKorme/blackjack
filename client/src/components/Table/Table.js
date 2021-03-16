@@ -18,11 +18,13 @@ const Table = (props) => {
   const [playerDeck] = useState(new Deck());
   const [playerAccount, setPlayerAccount] = useState(props.bet1);
   const [playerEndGame, setPlayerEndGame] = useState(false);
+  const [playerHasWon, setPlayerHasWon] = useState(false);
 
   const [player2Cards, setPlayer2Cards] = useState([]);
   const [player2Deck] = useState(new Deck());
   const [playerAccount2, setPlayerAccount2] = useState(props.bet2);
   const [player2EndGame, setPlayer2EndGame] = useState(false);
+  const [player2HasWon, setPlayer2HasWon] = useState(false);
 
   const [disableBtn] = useState(false);
   const [showModal, setShowModal] = useState(true);
@@ -87,11 +89,27 @@ const Table = (props) => {
     return num;
   };
 
+  const cardReset = () => {
+    if (props.players > 1) {
+      playerDeck.reset();
+      playerDeck.shuffle();
+      player2Deck.reset();
+      player2Deck.shuffle();
+      dealerDeck.reset();
+      dealerDeck.shuffle();
+    } else {
+      playerDeck.reset();
+      playerDeck.shuffle();
+      dealerDeck.reset();
+      dealerDeck.shuffle();
+    }
+  };
+
   const hitHandler = async () => {
     let hitCard = playerDeck.deal();
     let hitCard2 = player2Deck.deal();
 
-    if (turn && turn === "Player 1" && !playerEndGame) {
+    if (turn === "Player 1" && !playerEndGame) {
       await setPlayerCards((playerCards) => [
         ...playerCards,
         <Card
@@ -276,13 +294,23 @@ const Table = (props) => {
 
           let winnings = Number(playerAccount) + betRound * 1.5;
           setPlayerAccount(winnings);
-          setRound("endgame-win");
+          setPlayerHasWon(true);
+          setPlayerEndGame(true);
+          setRound("endgame-win-player1");
           setShowModal(!showModal);
 
-          playerDeck.reset();
-          playerDeck.shuffle();
-          dealerDeck.reset();
-          dealerDeck.shuffle();
+          cardReset();
+        } else {
+          setDealerBlackCard(false);
+          await timeout(600);
+
+          let losses = Number(playerAccount) - betRound;
+          setPlayerAccount(losses);
+          setPlayerEndGame(true);
+          setRound("endgame-multiplayer-loss");
+          setShowModal(!showModal);
+
+          cardReset();
         }
       } else if (playerEndGame && !player2EndGame) {
         if (player2Hand > dealerHand && player2Hand <= 21) {
@@ -290,57 +318,106 @@ const Table = (props) => {
           await timeout(600);
 
           let winnings = Number(playerAccount2) + betRound2 * 1.5;
-          setPlayerAccount(winnings);
-          setRound("endgame-win");
+          setPlayerAccount2(winnings);
+          setPlayer2HasWon(true);
+          setPlayer2EndGame(true);
+          setRound("endgame-win-player2");
           setShowModal(!showModal);
 
-          playerDeck.reset();
-          playerDeck.shuffle();
-          dealerDeck.reset();
-          dealerDeck.shuffle();
-        }
-      } else {
-        if (playerHand > dealerHand && playerHand <= 21) {
-          setDealerBlackCard(false);
-          await timeout(600);
-
-          let winnings = Number(playerAccount) + betRound * 1.5;
-          setPlayerAccount(winnings);
-          setRound("endgame-win");
-          setShowModal(!showModal);
-
-          playerDeck.reset();
-          playerDeck.shuffle();
-          dealerDeck.reset();
-          dealerDeck.shuffle();
+          cardReset();
         } else {
           setDealerBlackCard(false);
           await timeout(600);
 
-          let losses = Number(playerAccount) - betRound;
-          setPlayerAccount(losses);
-          setRound("endgame-loss");
+          let losses = Number(playerAccount2) - betRound2;
+          setPlayerAccount2(losses);
+          setPlayer2EndGame(true);
+          setRound("endgame-multiplayer-loss");
           setShowModal(!showModal);
 
-          playerDeck.reset();
-          playerDeck.shuffle();
-          dealerDeck.reset();
-          dealerDeck.shuffle();
+          cardReset();
         }
+      } else {
+        switch (turn) {
+          case "Player 1":
+            if (playerHand > dealerHand && playerHand <= 21) {
+              let winnings = Number(playerAccount) + betRound * 1.5;
+              setPlayerAccount(winnings);
+              setPlayerEndGame(true);
+              setPlayerHasWon(true);
+              setRound("endgame-win-player1");
+              setShowModal(!showModal);
+              setTurn("Player 2");
+              playerDeck.reset();
+              playerDeck.shuffle();
+            } else {
+              let losses = Number(playerAccount) - betRound;
+              setPlayerAccount(losses);
+              setPlayerEndGame(true);
+              setRound("endgame-loss-player1");
+              setShowModal(!showModal);
+              setTurn("Player 2");
+              playerDeck.reset();
+              playerDeck.shuffle();
+            }
+            break;
+          case "Player 2":
+            if (player2Hand > dealerHand && player2Hand <= 21) {
+              let winnings = Number(playerAccount2) + betRound2 * 1.5;
+              setPlayerAccount2(winnings);
+              setPlayer2EndGame(true);
+              setPlayer2HasWon(true);
+              setRound("endgame-win-player2");
+              setShowModal(!showModal);
+              setTurn("Player 1");
+              player2Deck.reset();
+              player2Deck.shuffle();
+            } else {
+              let losses = Number(playerAccount) - betRound2;
+              setPlayerAccount2(losses);
+              setPlayer2EndGame(true);
+              setRound("endgame-loss-player2");
+              setShowModal(!showModal);
+              setTurn("Player 1");
+              player2Deck.reset();
+              player2Deck.shuffle();
+            }
+            break;
+          default:
+            return;
+        }
+      }
+    } else {
+      if (playerHand > dealerHand && playerHand <= 21) {
+        setDealerBlackCard(false);
+        await timeout(600);
+        let winnings = Number(playerAccount) + betRound * 1.5;
+        setPlayerAccount(winnings);
+        setRound("endgame-win");
+        setShowModal(!showModal);
+        cardReset();
+      } else {
+        setDealerBlackCard(false);
+        await timeout(600);
+        let losses = Number(playerAccount) - betRound;
+        setPlayerAccount(losses);
+        setRound("endgame-loss");
+        setShowModal(!showModal);
+        cardReset();
       }
     }
   };
   const playAgainHandler = () => {
-    if (playerAccount <= 0) {
-      setRound("out-of-money");
-      setBetRound(0);
-      setShowModal(true);
-    } else if (playerAccount <= 0 || playerAccount2 <= 0) {
+    if (playerAccount <= 0 || playerAccount2 <= 0) {
       setRound("out-of-money");
       setBetRound(0);
       setShowModal(true);
     } else if (props.players > 1) {
       setDealerBlackCard(true);
+      setBetRound(0);
+      setBetRound2(0);
+      setPlayerHasWon(false);
+      setPlayer2HasWon(false);
       setRound("start-multiplayer");
       setTurn("Player 1");
       setPlayerCards([]);
@@ -348,8 +425,6 @@ const Table = (props) => {
       setDealerCards([]);
       setPlayerEndGame(false);
       setPlayer2EndGame(false);
-      setBetRound(0);
-      setBetRound2(0);
       setShowModal(true);
     } else {
       setDealerBlackCard(true);
@@ -361,12 +436,29 @@ const Table = (props) => {
     }
   };
   const continueHandler = () => {
+    console.log("Player 1 EndGame:", playerEndGame);
+    console.log("Player 1 HasWon:", playerHasWon);
+    console.log("Player 2 EndGame:", player2EndGame);
+    console.log("Player 2 HasWon:", player2HasWon);
     if (playerEndGame && player2EndGame) {
-      setRound("endgame-multiplayer-loss");
+      if (playerHasWon && player2HasWon) {
+        setRound("endgame-win-multiplayer");
+        setShowModal(true);
+      } else if (!playerHasWon && player2HasWon) {
+        setRound("endgame-win-multiplayer2");
+        setShowModal(true);
+      } else if (playerHasWon && !player2HasWon) {
+        setRound("endgame-win-multiplayer1");
+        setShowModal(true);
+      } else {
+        setRound("endgame-multiplayer-loss");
+        setShowModal(true);
+      }
     } else {
       setShowModal(!showModal);
     }
   };
+
   return (
     <div className={style}>
       <ModalCustom
@@ -397,21 +489,25 @@ const Table = (props) => {
             ]}
       </div>
       <div className={classes.Deck}>
-        <h6
-          style={{
-            margin: "0px",
-            fontSize: "15px",
-            textAlign: "center",
-            color: "rgb(240, 240, 240)",
-          }}
-        >
-          Turn: {turn}
-        </h6>
+        {props.players > 1 ? (
+          <h6
+            style={{
+              margin: "0px",
+              fontSize: "15px",
+              textAlign: "center",
+              color: "rgb(240, 240, 240)",
+            }}
+          >
+            Turn: {turn}
+          </h6>
+        ) : null}
         <Card deck={true} back={true} />
       </div>
       {players}
       {props.players < 2 ? (
-        <h4 style={{ textAlign: "right", paddingTop: "50px", fontSize: "2px" }}>
+        <h4
+          style={{ textAlign: "right", paddingTop: "50px", fontSize: "15px" }}
+        >
           Amount: ${numberWithCommas(playerAccount)} -- You've bet $
           {numberWithCommas(betRound)} this round
         </h4>

@@ -116,13 +116,19 @@ const ModalCustom = (props) => {
                 <button
                   className={classes.Btn}
                   onClick={() => {
-                    setBet(0);
                     props.modalHandler(bet);
+                    setBet(0);
                   }}
                 >
                   Lets play!
                 </button>
-              ) : null}
+              ) : (
+                <Link to="/">
+                  <button className={classes.EndGame}>
+                    <strong>End Game</strong>
+                  </button>
+                </Link>
+              )}
             </div>
           </Modal>
         );
@@ -219,8 +225,9 @@ const ModalCustom = (props) => {
                 <button
                   className={classes.Btn}
                   onClick={() => {
-                    setBet(0);
                     props.modalHandler(bet, bet2);
+                    setBet(0);
+                    setBet2(0);
                   }}
                 >
                   Lets play!
@@ -246,12 +253,88 @@ const ModalCustom = (props) => {
           </Modal>
         );
         break;
+      case "endgame-win-player1":
+        modal = (
+          <Modal isOpen={props.showModal} style={modalStyle}>
+            <h2>You've won Player 1!</h2>
+            <p>We've added the following to your account</p>
+            <p style={{ color: "green" }}>${props.betRound * 1.5}</p>
+            <form>
+              <button onClick={props.continueHandler}>Continue</button>
+              <Link to={"/"}>
+                <button>End Game</button>
+              </Link>
+            </form>
+          </Modal>
+        );
+        break;
+      case "endgame-win-player2":
+        modal = (
+          <Modal isOpen={props.showModal} style={modalStyle}>
+            <h2>You've won Player 2!</h2>
+            <p>We've added the following to your account</p>
+            <p style={{ color: "green" }}>${props.betRound2 * 1.5}</p>
+            <form>
+              <button onClick={props.continueHandler}>Continue</button>
+              <Link to={"/"}>
+                <button>End Game</button>
+              </Link>
+            </form>
+          </Modal>
+        );
+        break;
       case "endgame-win-multiplayer":
         modal = (
           <Modal isOpen={props.showModal} style={modalStyle}>
-            <h2>You've won!</h2>
+            <h2>You both have won!</h2>
             <p>We've added the following to your account</p>
-            <p style={{ color: "green" }}>${props.betRound * 1.5}</p>
+            <p style={{ color: "green" }}>Player 1: ${props.betRound * 1.5}</p>
+            <p style={{ color: "green" }}>Player 2: ${props.betRound2 * 1.5}</p>
+            <form>
+              <button onClick={props.playAgainHandler}>Lets Play Again!</button>
+              <Link to={"/"}>
+                <button>End Game</button>
+              </Link>
+            </form>
+          </Modal>
+        );
+        break;
+      case "endgame-win-multiplayer1":
+        modal = (
+          <Modal isOpen={props.showModal} style={modalStyle}>
+            <h2>You've Won Player 1!</h2>
+            <p>We've added the following to your account</p>
+            <p>
+              Player 1:
+              <span style={{ color: "green" }}> ${props.betRound * 1.5}</span>
+            </p>
+            <h2>We've removed the following from your account...</h2>
+            <p>
+              Player 2:{" "}
+              <span style={{ color: "red" }}> ${props.betRound2}</span>
+            </p>
+            <form>
+              <button onClick={props.playAgainHandler}>Lets Play Again!</button>
+              <Link to={"/"}>
+                <button>End Game</button>
+              </Link>
+            </form>
+          </Modal>
+        );
+        break;
+      case "endgame-win-multiplayer2":
+        modal = (
+          <Modal isOpen={props.showModal} style={modalStyle}>
+            <h2>You've Won Player 2!</h2>
+            <p>We've added the following to your account</p>
+            <p>
+              Player 2:
+              <span style={{ color: "green" }}>${props.betRound2 * 1.5}</span>
+            </p>
+            <h2>We've removed the following from your account...</h2>
+            <p>
+              Player 1: <span style={{ color: "red" }}>${props.betRound}</span>
+            </p>
             <form>
               <button onClick={props.playAgainHandler}>Lets Play Again!</button>
               <Link to={"/"}>
